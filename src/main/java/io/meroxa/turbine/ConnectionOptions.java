@@ -1,5 +1,7 @@
 package io.meroxa.turbine;
 
+import lombok.ToString;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +10,7 @@ import java.util.Map;
  * Essentially, it's a map, but having an interface
  * makes it easier to add helper methods.
  */
+@ToString
 public class ConnectionOptions {
     private final Map<String, Object> map;
 

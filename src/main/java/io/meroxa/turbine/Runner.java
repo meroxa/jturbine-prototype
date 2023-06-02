@@ -1,11 +1,15 @@
 package io.meroxa.turbine;
 
+import io.meroxa.turbine.local.LocalTurbine;
+
 /**
  * Runs a Turbine app.
  */
 public class Runner {
     public static void start(TurbineApp app) {
-        Turbine turbine = null;
-        app.setup(turbine);
+        String turbineCoreServer = System.getProperty("turbine.core.server");
+        String appPath = System.getProperty("turbine.app.path");
+
+        app.setup(LocalTurbine.create(turbineCoreServer, appPath));
     }
 }

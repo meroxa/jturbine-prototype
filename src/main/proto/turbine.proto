@@ -8,7 +8,7 @@ import "google/protobuf/wrappers.proto";
 import "validate/validate.proto";
 
 option go_package = "github.com/meroxa/turbine/core";
-option java_package = "io.meroxa.turbine.core";
+option java_package = "io.meroxa.turbine.proto";
 option java_multiple_files = true;
 
 service TurbineService {
@@ -28,6 +28,7 @@ enum Language {
   PYTHON = 1;
   JAVASCRIPT = 2;
   RUBY = 3;
+  JAVA = 4;
 }
 
 message InitRequest {
