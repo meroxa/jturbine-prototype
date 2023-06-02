@@ -1,4 +1,4 @@
-package io.meroxa.jturbine;
+package io.meroxa.turbine;
 
 public class Main {
     public static void main(String[] args) {

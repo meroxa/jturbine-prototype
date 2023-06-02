@@ -1,4 +1,4 @@
-package io.meroxa.jturbine;
+package io.meroxa.turbine;
 
 import com.google.protobuf.Empty;
 import io.grpc.stub.StreamObserver;
