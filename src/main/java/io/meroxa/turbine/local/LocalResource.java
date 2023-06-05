@@ -33,7 +33,7 @@ public class LocalResource implements Resource {
             .build();
 
         Collection collection = stub.readCollection(request);
-        return new LocalRecords(stub, collection);
+        return LocalRecords.fromProtoCollection(collection);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class LocalResource implements Resource {
         WriteCollectionRequest req = WriteCollectionRequest
             .newBuilder()
             .setResource(resource)
-            .setSourceCollection(((LocalRecords) records).getCollection())
+            .setSourceCollection(((LocalRecords) records).toProtoCollection())
             .setTargetCollection(collection)
             .build();
 
