@@ -5,7 +5,6 @@ import com.google.protobuf.Timestamp;
 import com.meroxa.turbine.*;
 import com.meroxa.turbine.proto.Collection;
 import com.meroxa.turbine.proto.Record;
-import io.meroxa.turbine.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

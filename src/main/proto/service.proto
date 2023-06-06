@@ -5,7 +5,7 @@ package io.meroxa.funtime;
 import "google/protobuf/struct.proto";
 
 option go_package = "github.com/meroxa/funtime/proto";
-option java_package = "io.meroxa.turbine.funtime.proto";
+option java_package = "com.meroxa.turbine.funtime.proto";
 option java_multiple_files = true;
 
 message ProcessRecordRequest {
