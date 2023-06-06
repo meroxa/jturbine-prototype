@@ -1,5 +1,7 @@
 package io.meroxa.turbine;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,11 +14,23 @@ import java.time.LocalDateTime;
 @Setter
 @Builder(toBuilder = true)
 public class TurbineRecord {
+    private static final ObjectMapper mapper = new ObjectMapper();
     private String key;
     private String payload;
     private LocalDateTime timestamp;
 
     public TurbineRecord copy() {
         return this.toBuilder().build();
+    }
+
+    public void jsonSet(String path, Object value) {
+        var newPayload = JsonPath.parse(getPayload())
+            .set(path, value)
+            .jsonString();
+        setPayload(newPayload);
+    }
+
+    public Object jsonGet(String path) {
+        return JsonPath.read(getPayload(), path);
     }
 }
