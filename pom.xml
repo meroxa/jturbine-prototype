@@ -6,7 +6,7 @@
 
     <groupId>com.meroxa</groupId>
     <artifactId>jturbine-prototype</artifactId>
-    <version>v0.2.0</version>
+    <version>v0.2.2</version>
 
     <name>jturbine-prototype</name>
     <description>A prototype of a Turbine Java SDK</description>
