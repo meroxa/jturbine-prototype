@@ -1,4 +1,4 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.QuarkusApplication;

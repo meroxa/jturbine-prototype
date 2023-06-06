@@ -1,10 +1,11 @@
-package io.meroxa.turbine.local;
+package com.meroxa.turbine.local;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
+import com.meroxa.turbine.*;
+import com.meroxa.turbine.proto.Collection;
+import com.meroxa.turbine.proto.Record;
 import io.meroxa.turbine.*;
-import io.meroxa.turbine.proto.Collection;
-import io.meroxa.turbine.proto.Record;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

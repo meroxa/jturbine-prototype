@@ -1,22 +1,22 @@
-package io.meroxa.turbine.local;
+package com.meroxa.turbine.local;
 
 import com.google.protobuf.Empty;
-import io.meroxa.turbine.ConnectionOptions;
-import io.meroxa.turbine.Records;
-import io.meroxa.turbine.Resource;
-import io.meroxa.turbine.proto.Collection;
-import io.meroxa.turbine.proto.ReadCollectionRequest;
-import io.meroxa.turbine.proto.TurbineServiceGrpc;
-import io.meroxa.turbine.proto.WriteCollectionRequest;
+import com.meroxa.turbine.proto.Collection;
+import com.meroxa.turbine.proto.Resource;
+import com.meroxa.turbine.proto.WriteCollectionRequest;
+import com.meroxa.turbine.ConnectionOptions;
+import com.meroxa.turbine.Records;
+import com.meroxa.turbine.proto.ReadCollectionRequest;
+import com.meroxa.turbine.proto.TurbineServiceGrpc;
 import org.jboss.logging.Logger;
 
-public class LocalResource implements Resource {
+public class LocalResource implements com.meroxa.turbine.Resource {
     private static final Logger logger = Logger.getLogger(LocalResource.class);
     private final TurbineServiceGrpc.TurbineServiceBlockingStub stub;
-    private final io.meroxa.turbine.proto.Resource resource;
+    private final Resource resource;
 
     public LocalResource(TurbineServiceGrpc.TurbineServiceBlockingStub stub,
-                         io.meroxa.turbine.proto.Resource resource) {
+                         Resource resource) {
 
         this.stub = stub;
         this.resource = resource;

@@ -1,6 +1,6 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
-import io.meroxa.turbine.local.LocalTurbine;
+import com.meroxa.turbine.local.LocalTurbine;
 
 /**
  * Runs a Turbine app.

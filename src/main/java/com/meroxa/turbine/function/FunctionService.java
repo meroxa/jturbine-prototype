@@ -1,9 +1,9 @@
-package io.meroxa.turbine.function;
+package com.meroxa.turbine.function;
 
 import io.grpc.stub.StreamObserver;
-import io.meroxa.turbine.funtime.proto.FunctionGrpc;
-import io.meroxa.turbine.funtime.proto.ProcessRecordRequest;
-import io.meroxa.turbine.funtime.proto.ProcessRecordResponse;
+import com.meroxa.turbine.funtime.proto.FunctionGrpc;
+import com.meroxa.turbine.funtime.proto.ProcessRecordRequest;
+import com.meroxa.turbine.funtime.proto.ProcessRecordResponse;
 import io.quarkus.grpc.GrpcService;
 
 @GrpcService

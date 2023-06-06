@@ -1,4 +1,4 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
 import java.util.Collection;
 import java.util.stream.Stream;

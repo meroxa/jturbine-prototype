@@ -1,14 +1,14 @@
-package io.meroxa.turbine.local;
+package com.meroxa.turbine.local;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meroxa.turbine.proto.GetResourceRequest;
+import com.meroxa.turbine.proto.InitRequest;
+import com.meroxa.turbine.proto.Language;
+import com.meroxa.turbine.proto.Resource;
 import io.grpc.ManagedChannelBuilder;
-import io.meroxa.turbine.Resource;
-import io.meroxa.turbine.Turbine;
-import io.meroxa.turbine.proto.GetResourceRequest;
-import io.meroxa.turbine.proto.InitRequest;
-import io.meroxa.turbine.proto.Language;
-import io.meroxa.turbine.proto.TurbineServiceGrpc;
+import com.meroxa.turbine.Turbine;
+import com.meroxa.turbine.proto.TurbineServiceGrpc;
 import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
@@ -58,12 +58,12 @@ public class LocalTurbine implements Turbine {
     }
 
     @Override
-    public Resource resource(String name) {
+    public com.meroxa.turbine.Resource resource(String name) {
         GetResourceRequest get = GetResourceRequest
             .newBuilder()
             .setName(name)
             .build();
-        io.meroxa.turbine.proto.Resource resource = stub.getResource(get);
+        Resource resource = stub.getResource(get);
         return new LocalResource(stub, resource);
     }
 

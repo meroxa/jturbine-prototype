@@ -1,6 +1,6 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
-import io.meroxa.turbine.proto.TurbineServiceGrpc;
+import com.meroxa.turbine.proto.TurbineServiceGrpc;
 import io.quarkus.grpc.GrpcService;
 
 

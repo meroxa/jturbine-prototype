@@ -1,4 +1,4 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;

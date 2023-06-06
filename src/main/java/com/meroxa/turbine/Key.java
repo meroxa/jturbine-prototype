@@ -1,4 +1,4 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
 public interface Key {
     byte[] bytes();

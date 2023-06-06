@@ -1,4 +1,4 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
 /**
  * Represents a (collection) stream of {@link TurbineRecord}s.

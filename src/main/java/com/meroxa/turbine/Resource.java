@@ -1,4 +1,4 @@
-package io.meroxa.turbine;
+package com.meroxa.turbine;
 
 /**
  * Represents a <a href="https://docs.meroxa.com/platform/resources/overview">resource</a> in Meroxa.
