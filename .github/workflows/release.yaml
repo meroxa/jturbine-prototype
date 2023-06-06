@@ -1,8 +1,11 @@
 name: Publish package to GitHub Packages
+
 on:
   push:
     tags:
       - v*
+  workflow_dispatch:
+
 jobs:
   publish:
     runs-on: ubuntu-latest
