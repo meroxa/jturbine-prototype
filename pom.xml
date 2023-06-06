@@ -6,7 +6,7 @@
 
     <groupId>com.meroxa</groupId>
     <artifactId>jturbine-prototype</artifactId>
-    <version>v0.2.2</version>
+    <version>v0.2.3</version>
 
     <name>jturbine-prototype</name>
     <description>A prototype of a Turbine Java SDK</description>
@@ -38,6 +38,8 @@
     <properties>
         <compiler-plugin.version>3.11.0</compiler-plugin.version>
         <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.source>1.17</maven.compiler.source>
+        <maven.compiler.target>1.17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
