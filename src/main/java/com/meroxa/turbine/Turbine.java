@@ -8,5 +8,9 @@ public interface Turbine {
     //  but only ever used as a destination? Should we warn about that?
     Resource resource(String name);
 
+    /**
+     * Registers a secret with the given name.
+     * @param name is the name of the secret to be registered.
+     */
     void registerSecret(String name);
 }
