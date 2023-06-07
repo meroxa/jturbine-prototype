@@ -1,6 +1,7 @@
 package com.meroxa.turbine;
 
 import com.meroxa.turbine.local.LocalTurbine;
+import io.quarkus.runtime.Quarkus;
 
 /**
  * Runs a Turbine app.
