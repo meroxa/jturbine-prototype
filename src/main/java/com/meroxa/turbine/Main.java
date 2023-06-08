@@ -1,6 +1,8 @@
 package com.meroxa.turbine;
 
+import com.meroxa.turbine.deploy.DeployTurbine;
 import com.meroxa.turbine.local.LocalResource;
+import com.meroxa.turbine.local.LocalTurbine;
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.QuarkusApplication;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,6 +16,8 @@ public class Main implements QuarkusApplication {
 
     @Inject
     Instance<TurbineApp> turbineApp;
+    @Inject
+    DeployTurbine deployTurbine;
 
     @Override
     public int run(String... args) {
@@ -29,11 +33,15 @@ public class Main implements QuarkusApplication {
             throw new IllegalArgumentException("unknown mode: " + mode);
         }
 
+        logger.infof("turbineApp: %s", turbineApp);
+        logger.infof("turbineApp: %s", turbineApp.get());
         if (mode.equals("local")) {
-            logger.infof("turbineApp: %s", turbineApp);
-            logger.infof("turbineApp: %s", turbineApp.get());
-            Runner.start(turbineApp.get());
+            String turbineCoreServer = System.getProperty("turbine.core.server");
+            String appPath = System.getProperty("turbine.app.path");
+
+            turbineApp.get().setup(LocalTurbine.create(turbineCoreServer, appPath));
         } else {
+            turbineApp.get().setup(deployTurbine);
             Quarkus.waitForExit();
         }
 
