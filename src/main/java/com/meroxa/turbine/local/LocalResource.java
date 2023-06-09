@@ -33,7 +33,7 @@ public class LocalResource implements com.meroxa.turbine.Resource {
             .build();
 
         Collection collection = stub.readCollection(request);
-        return LocalRecords.fromProtoCollection(collection);
+        return LocalRecords.fromProtoCollection(stub, collection);
     }
 
     @Override

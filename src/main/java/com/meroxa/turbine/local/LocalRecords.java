@@ -4,7 +4,9 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import com.meroxa.turbine.*;
 import com.meroxa.turbine.proto.Collection;
+import com.meroxa.turbine.proto.ProcessCollectionRequest;
 import com.meroxa.turbine.proto.Record;
+import com.meroxa.turbine.proto.TurbineServiceGrpc;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,12 +18,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public class LocalRecords implements Records {
+    private final TurbineServiceGrpc.TurbineServiceBlockingStub stub;
+    private final Collection collection;
     private final String name;
     private final String stream;
     private final List<TurbineRecord> records;
 
-    public static LocalRecords fromProtoCollection(Collection collection) {
+    public static LocalRecords fromProtoCollection(TurbineServiceGrpc.TurbineServiceBlockingStub stub, Collection collection) {
         return new LocalRecords(
+            stub,
+            collection,
             collection.getName(),
             collection.getStream(),
             toTurbineRecords(collection.getRecordsList())
@@ -52,7 +58,22 @@ public class LocalRecords implements Records {
 
     @Override
     public Records process(Processor processor) {
+        ProcessCollectionRequest req = ProcessCollectionRequest
+            .newBuilder()
+            .setProcess(
+                ProcessCollectionRequest.Process
+                    .newBuilder()
+                    .setName(processor.toString())
+                    .build()
+            )
+            .setCollection(collection)
+            .build();
+
+        Collection response = stub.addProcessToCollection(req);
+
         return new LocalRecords(
+            stub,
+            collection,
             name,
             stream,
             process(records, processor)
