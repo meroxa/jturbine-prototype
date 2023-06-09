@@ -37,7 +37,7 @@ public class LocalRecords implements Records {
     private static TurbineRecord toTurbineRecord(Record record) {
         return TurbineRecord.builder()
             .key(record.getKey())
-            .payload(record.getValue().toString())
+            .payload(record.getValue().toStringUtf8())
             .timestamp(toJavaTimestamp(record.getTimestamp()))
             .build();
     }
