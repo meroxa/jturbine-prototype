@@ -19,14 +19,14 @@ import java.util.List;
 public class FunctionService extends FunctionGrpc.FunctionImplBase implements Turbine {
     @Inject
     Instance<DeployTurbine> turbine;
-    Processor processor;
 
     @Override
     public void process(ProcessRecordRequest request,
                         StreamObserver<ProcessRecordResponse> responseObserver) {
 
         try {
-            List<TurbineRecord> processed = getProcessor()
+            List<TurbineRecord> processed = turbine.get()
+                .getProcessor()
                 .apply(toTurbineRecords(request.getRecordsList()));
             responseObserver.onNext(
                 ProcessRecordResponse
@@ -82,7 +82,7 @@ public class FunctionService extends FunctionGrpc.FunctionImplBase implements Tu
 
     @Override
     public Resource resource(String name) {
-        return new FunctionResource(this);
+        return null;
     }
 
     @Override
@@ -90,48 +90,4 @@ public class FunctionService extends FunctionGrpc.FunctionImplBase implements Tu
 
     }
 
-    public void setProcessor(Processor processor) {
-        this.processor = processor;
-    }
-
-    public Processor getProcessor() {
-        return processor;
-    }
-
-    private static final class FunctionResource implements Resource {
-        private final FunctionService functionService;
-
-        public FunctionResource(FunctionService functionService) {
-            this.functionService = functionService;
-        }
-
-        @Override
-        public Records read(String collection, ConnectionOptions options) {
-            return new FunctionRecords(functionService);
-        }
-
-        @Override
-        public void write(Records records, String collection, ConnectionOptions options) {
-
-        }
-    }
-
-    private static final class FunctionRecords implements Records {
-        private final FunctionService functionService;
-
-        public FunctionRecords(FunctionService functionService) {
-            this.functionService = functionService;
-        }
-
-        @Override
-        public Records process(Processor processor) {
-            functionService.setProcessor(processor);
-            return this;
-        }
-
-        @Override
-        public void writeTo(Resource resource, String collection, ConnectionOptions options) {
-
-        }
-    }
 }

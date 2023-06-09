@@ -6,9 +6,16 @@ import com.meroxa.turbine.Records;
 import com.meroxa.turbine.Resource;
 
 public class DeployRecords implements Records {
+    private final DeployTurbine deployTurbine;
+
+    public DeployRecords(DeployTurbine deployTurbine) {
+        this.deployTurbine = deployTurbine;
+    }
+
     @Override
     public Records process(Processor processor) {
-        return null;
+        deployTurbine.setProcessor(processor);
+        return this;
     }
 
     @Override

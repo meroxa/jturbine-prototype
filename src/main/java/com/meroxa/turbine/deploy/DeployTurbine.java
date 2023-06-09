@@ -7,9 +7,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DeployTurbine implements Turbine {
+    private Processor processor;
+
     @Override
     public Resource resource(String name) {
-        return new DeployResource();
+        return new DeployResource(this);
     }
 
     @Override
@@ -17,7 +19,11 @@ public class DeployTurbine implements Turbine {
 
     }
 
-    public Processor processor() {
-        return null;
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    public void setProcessor(Processor processor) {
+        this.processor = processor;
     }
 }
