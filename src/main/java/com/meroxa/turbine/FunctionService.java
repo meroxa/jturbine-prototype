@@ -14,23 +14,42 @@ import jakarta.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @GrpcService
-public class FunctionService extends FunctionGrpc.FunctionImplBase {
+public class FunctionService extends FunctionGrpc.FunctionImplBase implements Turbine {
     @Inject
     Instance<DeployTurbine> turbine;
+    Processor processor;
 
     @Override
     public void process(ProcessRecordRequest request,
                         StreamObserver<ProcessRecordResponse> responseObserver) {
 
+        try {
+            List<TurbineRecord> processed = getProcessor()
+                .apply(toTurbineRecords(request.getRecordsList()));
+            responseObserver.onNext(
+                ProcessRecordResponse
+                    .newBuilder()
+                    .addAllRecords(toProtoRecords(processed))
+                    .build()
+            );
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
+        responseObserver.onCompleted();
+    }
+
+    private List<Record> toProtoRecords(List<TurbineRecord> turbineRecords) {
+        return Utils.toStream(turbineRecords)
+            .map(this::toProtoRecord)
+            .toList();
     }
 
     private List<TurbineRecord> toTurbineRecords(List<Record> protoRecords) {
         return Utils.toStream(protoRecords)
             .map(this::toTurbineRecord)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private TurbineRecord toTurbineRecord(Record record) {
@@ -45,8 +64,8 @@ public class FunctionService extends FunctionGrpc.FunctionImplBase {
         return LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC);
     }
 
-    private com.meroxa.turbine.funtime.proto.Record toProtoRecord(TurbineRecord record) {
-        return com.meroxa.turbine.funtime.proto.Record
+    private Record toProtoRecord(TurbineRecord record) {
+        return Record
             .newBuilder()
             .setKey(record.getKey())
             .setValue(record.getPayload())
@@ -59,5 +78,60 @@ public class FunctionService extends FunctionGrpc.FunctionImplBase {
             .setSeconds(timestamp.getSecond())
             .setNanos(timestamp.getNano())
             .build();
+    }
+
+    @Override
+    public Resource resource(String name) {
+        return new FunctionResource(this);
+    }
+
+    @Override
+    public void registerSecret(String name) {
+
+    }
+
+    public void setProcessor(Processor processor) {
+        this.processor = processor;
+    }
+
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    private static final class FunctionResource implements Resource {
+        private final FunctionService functionService;
+
+        public FunctionResource(FunctionService functionService) {
+            this.functionService = functionService;
+        }
+
+        @Override
+        public Records read(String collection, ConnectionOptions options) {
+            return new FunctionRecords(functionService);
+        }
+
+        @Override
+        public void write(Records records, String collection, ConnectionOptions options) {
+
+        }
+    }
+
+    private static final class FunctionRecords implements Records {
+        private final FunctionService functionService;
+
+        public FunctionRecords(FunctionService functionService) {
+            this.functionService = functionService;
+        }
+
+        @Override
+        public Records process(Processor processor) {
+            functionService.setProcessor(processor);
+            return this;
+        }
+
+        @Override
+        public void writeTo(Resource resource, String collection, ConnectionOptions options) {
+
+        }
     }
 }

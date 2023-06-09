@@ -17,7 +17,7 @@ public class Main implements QuarkusApplication {
     @Inject
     Instance<TurbineApp> turbineApp;
     @Inject
-    DeployTurbine deployTurbine;
+    FunctionService functionService;
 
     @Override
     public int run(String... args) {
@@ -41,7 +41,7 @@ public class Main implements QuarkusApplication {
 
             turbineApp.get().setup(LocalTurbine.create(turbineCoreServer, appPath));
         } else {
-            turbineApp.get().setup(deployTurbine);
+            turbineApp.get().setup(functionService);
             Quarkus.waitForExit();
         }
 
