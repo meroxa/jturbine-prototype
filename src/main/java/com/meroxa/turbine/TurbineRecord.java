@@ -30,9 +30,9 @@ public class TurbineRecord {
         setPayload(newPayload);
     }
 
-    public void jsonAdd(String path, Object value) {
+    public void jsonAdd(String path, String key, Object value) {
         var newPayload = JsonPath.parse(getPayload())
-            .add(path, value)
+            .put(path, key, value)
             .jsonString();
         setPayload(newPayload);
     }
