@@ -30,6 +30,13 @@ public class TurbineRecord {
         setPayload(newPayload);
     }
 
+    public void jsonAdd(String path, Object value) {
+        var newPayload = JsonPath.parse(getPayload())
+            .add(path, value)
+            .jsonString();
+        setPayload(newPayload);
+    }
+
     public Object jsonGet(String path) {
         return JsonPath.read(getPayload(), path);
     }
