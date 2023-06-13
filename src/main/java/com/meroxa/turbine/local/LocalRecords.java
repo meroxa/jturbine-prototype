@@ -63,7 +63,7 @@ public class LocalRecords implements Records {
             .setProcess(
                 ProcessCollectionRequest.Process
                     .newBuilder()
-                    .setName(processor.toString())
+                    .setName("turbinehellojava")
                     .build()
             )
             .setCollection(collection)
