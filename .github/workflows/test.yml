@@ -9,6 +9,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Setup upterm session
       uses: lhotari/action-upterm@v1
+      env:
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
     - name: Test
       run: mvn package
       env:
