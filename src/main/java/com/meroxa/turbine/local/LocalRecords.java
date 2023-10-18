@@ -34,7 +34,7 @@ public class LocalRecords implements Records {
         );
     }
 
-    private static List<TurbineRecord> toTurbineRecords(List<Record> protoRecords) {
+    public static List<TurbineRecord> toTurbineRecords(List<Record> protoRecords) {
         return Utils.toStream(protoRecords)
             .map(LocalRecords::toTurbineRecord)
             .collect(Collectors.toList());

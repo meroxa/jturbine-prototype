@@ -6,7 +6,7 @@
 
     <groupId>com.meroxa</groupId>
     <artifactId>jturbine-prototype</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.4.0-SNAPSHOT</version>
 
     <name>jturbine-prototype</name>
     <description>A prototype of a Turbine Java SDK</description>
@@ -73,6 +73,10 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-grpc</artifactId>
