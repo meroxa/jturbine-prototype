@@ -1,9 +1,10 @@
 package com.meroxa.turbine.deploy;
 
+import java.util.Map;
+
 import com.meroxa.turbine.ConnectionOptions;
 import com.meroxa.turbine.Processor;
 import com.meroxa.turbine.Records;
-import com.meroxa.turbine.Resource;
 
 public class DeployRecords implements Records {
     private final DeployTurbine deployTurbine;
@@ -19,7 +20,7 @@ public class DeployRecords implements Records {
     }
 
     @Override
-    public void writeTo(Resource resource, String collection, ConnectionOptions options) {
+    public void toDestination(String plugin, Map<String, String> config) {
 
     }
 }

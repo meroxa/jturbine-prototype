@@ -13,14 +13,28 @@ option java_multiple_files = true;
 
 service TurbineService {
   rpc Init(InitRequest) returns (google.protobuf.Empty);
-  rpc GetResource(GetResourceRequest) returns (Resource);
-  rpc ReadCollection(ReadCollectionRequest) returns (Collection);
-  rpc WriteCollectionToResource(WriteCollectionRequest) returns (google.protobuf.Empty);
+  rpc GetSource(GetSourceRequest) returns (Source);
   rpc AddProcessToCollection(ProcessCollectionRequest) returns (Collection);
-  rpc RegisterSecret(Secret) returns (google.protobuf.Empty);
+  rpc WriteToDestination(WriteToDestinationRequest) returns (google.protobuf.Empty);
+
+  // needed in CLI to know if a build is needed or not
   rpc HasFunctions(google.protobuf.Empty) returns (google.protobuf.BoolValue);
+  // needed in CLI to know which resources are used
   rpc ListResources(google.protobuf.Empty) returns (ListResourcesResponse);
+  // needed in the CLI for the deployment spec
   rpc GetSpec(GetSpecRequest) returns (GetSpecResponse);
+}
+
+message GetSourceRequest {
+
+}
+
+message Source {
+
+}
+
+message WriteToDestinationRequest {
+
 }
 
 enum Language {

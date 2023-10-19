@@ -13,6 +13,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -84,7 +85,7 @@ public class LocalRecords implements Records {
         return Utils.toStream(records)
             .map(r -> processor.apply(List.of(r)))
             .flatMap(List::stream)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public Collection toProtoCollection() {
@@ -118,8 +119,15 @@ public class LocalRecords implements Records {
             .build();
     }
 
-    @Override
+    /*
     public void writeTo(Resource resource, String collection, ConnectionOptions options) {
         resource.write(this, collection, options);
+    }
+
+     */
+
+    @Override
+    public void toDestination(String plugin, Map<String, String> config) {
+
     }
 }

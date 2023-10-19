@@ -2,6 +2,7 @@ package com.meroxa.turbine.local;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meroxa.turbine.Records;
 import com.meroxa.turbine.proto.GetResourceRequest;
 import com.meroxa.turbine.proto.InitRequest;
 import com.meroxa.turbine.proto.Language;
@@ -13,6 +14,7 @@ import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class LocalTurbine implements Turbine {
     private static final Logger logger = Logger.getLogger(LocalTurbine.class);
@@ -58,6 +60,16 @@ public class LocalTurbine implements Turbine {
     }
 
     @Override
+    public Records fromSource(String plugin, Map<String, String> config) {
+        return null;
+    }
+
+    @Override
+    public Map<String, String> configFromSecret(String secretname) {
+        return null;
+    }
+
+    /*
     public com.meroxa.turbine.Resource resource(String name) {
         GetResourceRequest get = GetResourceRequest
             .newBuilder()
@@ -66,9 +78,6 @@ public class LocalTurbine implements Turbine {
         Resource resource = stub.getResource(get);
         return new LocalResource(stub, resource);
     }
+    */
 
-    @Override
-    public void registerSecret(String name) {
-
-    }
 }

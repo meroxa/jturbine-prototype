@@ -10,7 +10,7 @@ import com.meroxa.turbine.proto.ReadCollectionRequest;
 import com.meroxa.turbine.proto.TurbineServiceGrpc;
 import org.jboss.logging.Logger;
 
-public class LocalResource implements com.meroxa.turbine.Resource {
+public class LocalResource {
     private static final Logger logger = Logger.getLogger(LocalResource.class);
     private final TurbineServiceGrpc.TurbineServiceBlockingStub stub;
     private final Resource resource;
@@ -22,7 +22,6 @@ public class LocalResource implements com.meroxa.turbine.Resource {
         this.resource = resource;
     }
 
-    @Override
     public Records read(String collectionName, ConnectionOptions options) {
         logger.infof("reading records %s with options %s", collectionName, options);
 
@@ -36,7 +35,6 @@ public class LocalResource implements com.meroxa.turbine.Resource {
         return LocalRecords.fromProtoCollection(stub, collection);
     }
 
-    @Override
     public void write(Records records, String collection, ConnectionOptions options) {
         logger.infof("writing records %s with options %s", collection, options);
         WriteCollectionRequest req = WriteCollectionRequest
