@@ -13,8 +13,9 @@ option java_multiple_files = true;
 
 service TurbineService {
   rpc Init(InitRequest) returns (google.protobuf.Empty);
-  rpc GetSource(GetSourceRequest) returns (Source);
-  rpc AddProcessToCollection(ProcessCollectionRequest) returns (Collection);
+  // todo consider one method parameterized with connector type
+  rpc ReadFromSource(ReadFromSourceRequest) returns (Collection);
+  rpc AddProcess(ProcessRecordsRequest) returns (Collection);
   rpc WriteToDestination(WriteToDestinationRequest) returns (google.protobuf.Empty);
 
   // needed in CLI to know if a build is needed or not
@@ -25,11 +26,17 @@ service TurbineService {
   rpc GetSpec(GetSpecRequest) returns (GetSpecResponse);
 }
 
-message GetSourceRequest {
-
+message ReadFromSourceRequest {
+  enum Direction {
+    SOURCE = 0;
+    DESTINATION = 1;
+  }
+  string pluginName = 1;
+  Direction direction = 2;
+  map<string, string> configuration = 3;
 }
 
-message Source {
+message Records {
 
 }
 
@@ -65,9 +72,7 @@ message Resource {
 }
 
 message Collection {
-  string name = 1 [(validate.rules).string.min_len = 1];
-  string stream = 2;
-  repeated Record records = 3;
+  repeated Record records = 1;
 }
 
 message Record {
@@ -98,13 +103,13 @@ message Config {
   string value = 2;
 }
 
-message ProcessCollectionRequest {
+message ProcessRecordsRequest {
   message Process {
     string name = 1;
   }
 
   Process process = 1 [(validate.rules).message.required = true];
-  Collection collection = 2 [(validate.rules).message.required = true];
+  repeated Record records = 2 [(validate.rules).message.required = true];
 }
 
 message Secret {
