@@ -1,4 +1,4 @@
-package com.meroxa.turbine.local;
+package com.meroxa.turbine.run;
 
 import com.google.protobuf.Empty;
 import com.meroxa.turbine.proto.Collection;

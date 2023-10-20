@@ -1,4 +1,4 @@
-package com.meroxa.turbine.local;
+package com.meroxa.turbine.run;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;

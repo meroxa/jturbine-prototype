@@ -1,7 +1,7 @@
 package com.meroxa.turbine;
 
 import com.meroxa.turbine.deploy.DeployTurbine;
-import com.meroxa.turbine.local.LocalTurbine;
+import com.meroxa.turbine.run.LocalTurbine;
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.QuarkusApplication;
 import jakarta.enterprise.context.ApplicationScoped;

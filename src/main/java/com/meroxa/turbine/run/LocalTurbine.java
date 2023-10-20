@@ -1,12 +1,10 @@
-package com.meroxa.turbine.local;
+package com.meroxa.turbine.run;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meroxa.turbine.Records;
-import com.meroxa.turbine.proto.GetResourceRequest;
 import com.meroxa.turbine.proto.InitRequest;
 import com.meroxa.turbine.proto.Language;
-import com.meroxa.turbine.proto.Resource;
 import io.grpc.ManagedChannelBuilder;
 import com.meroxa.turbine.Turbine;
 import com.meroxa.turbine.proto.TurbineServiceGrpc;
