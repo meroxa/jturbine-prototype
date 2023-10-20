@@ -77,6 +77,8 @@ public class LocalTurbine implements Turbine {
                 .setConfiguration(configurations)
                 .build()
         );
+
+        logger.infof("fromSource got stream name %s", response.getStream());
         return LocalRecordsCollection.fromProtoCollection(
             stub,
             response

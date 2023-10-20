@@ -12,8 +12,12 @@ import com.meroxa.turbine.Processor;
 import com.meroxa.turbine.RecordsCollection;
 import com.meroxa.turbine.TurbineRecord;
 import com.meroxa.turbine.Utils;
-import com.meroxa.turbine.proto.*;
+import com.meroxa.turbine.proto.Configuration;
+import com.meroxa.turbine.proto.Configurations;
+import com.meroxa.turbine.proto.ProcessRecordsRequest;
 import com.meroxa.turbine.proto.Record;
+import com.meroxa.turbine.proto.TurbineServiceGrpc;
+import com.meroxa.turbine.proto.WriteToDestinationRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,12 +25,14 @@ import lombok.Getter;
 @Getter
 public class LocalRecordsCollection implements RecordsCollection {
     private final TurbineServiceGrpc.TurbineServiceBlockingStub coreClient;
+    private final String sourceStreamName;
     private final List<TurbineRecord> records;
 
     public static LocalRecordsCollection fromProtoCollection(TurbineServiceGrpc.TurbineServiceBlockingStub stub,
                                                              com.meroxa.turbine.proto.RecordsCollection collection) {
         return new LocalRecordsCollection(
             stub,
+            collection.getStream(),
             toTurbineRecords(collection.getRecordsList())
         );
     }
@@ -55,6 +61,11 @@ public class LocalRecordsCollection implements RecordsCollection {
 
     @Override
     public RecordsCollection process(Processor processor) {
+        com.meroxa.turbine.proto.RecordsCollection recordsCollection = com.meroxa.turbine.proto.RecordsCollection
+            .newBuilder()
+            .setStream(getSourceStreamName())
+            .addAllRecords(getProtoRecords())
+            .build();
         ProcessRecordsRequest req = ProcessRecordsRequest
             .newBuilder()
             .setProcess(
@@ -63,13 +74,14 @@ public class LocalRecordsCollection implements RecordsCollection {
                     .setName("turbinehellojava")
                     .build()
             )
-            .setRecords(com.meroxa.turbine.proto.RecordsCollection.newBuilder().addAllRecords(getProtoRecords()).build())
+            .setRecords(recordsCollection)
             .build();
 
         com.meroxa.turbine.proto.RecordsCollection response = coreClient.process(req);
 
         return new LocalRecordsCollection(
             coreClient,
+            getSourceStreamName(),
             process(records, processor)
         );
     }
@@ -121,6 +133,7 @@ public class LocalRecordsCollection implements RecordsCollection {
 
         var records = com.meroxa.turbine.proto.RecordsCollection
             .newBuilder()
+            .setStream(getSourceStreamName())
             .addAllRecords(getProtoRecords())
             .build();
 
