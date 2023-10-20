@@ -65,7 +65,7 @@ public class LocalRecordsCollection implements RecordsCollection {
                     .setName("turbinehellojava")
                     .build()
             )
-            .addAllRecords(getProtoRecords())
+            .setRecords(com.meroxa.turbine.proto.RecordsCollection.newBuilder().addAllRecords(getProtoRecords()).build())
             .build();
 
         com.meroxa.turbine.proto.RecordsCollection response = coreClient.process(req);
