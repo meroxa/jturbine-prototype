@@ -119,10 +119,16 @@ public class LocalRecordsCollection implements RecordsCollection {
             configurations.addConfiguration(c);
         }
 
+        var records = com.meroxa.turbine.proto.RecordsCollection
+            .newBuilder()
+            .addAllRecords(getProtoRecords())
+            .build();
+
         WriteToDestinationRequest request = WriteToDestinationRequest
             .newBuilder()
             .setPluginName(plugin)
             .setConfiguration(configurations)
+            .setRecords(records)
             .build();
 
         coreClient.writeToDestination(request);
