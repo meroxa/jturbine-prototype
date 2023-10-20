@@ -2,11 +2,10 @@ package com.meroxa.turbine.deploy;
 
 import java.util.Map;
 
-import com.meroxa.turbine.ConnectionOptions;
 import com.meroxa.turbine.Processor;
-import com.meroxa.turbine.Records;
+import com.meroxa.turbine.RecordsCollection;
 
-public class DeployRecords implements Records {
+public class DeployRecords implements RecordsCollection {
     private final DeployTurbine deployTurbine;
 
     public DeployRecords(DeployTurbine deployTurbine) {
@@ -14,7 +13,7 @@ public class DeployRecords implements Records {
     }
 
     @Override
-    public Records process(Processor processor) {
+    public RecordsCollection process(Processor processor) {
         deployTurbine.setProcessor(processor);
         return this;
     }

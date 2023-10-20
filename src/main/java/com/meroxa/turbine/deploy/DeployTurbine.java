@@ -3,7 +3,7 @@ package com.meroxa.turbine.deploy;
 import java.util.Map;
 
 import com.meroxa.turbine.Processor;
-import com.meroxa.turbine.Records;
+import com.meroxa.turbine.RecordsCollection;
 import com.meroxa.turbine.Turbine;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -20,7 +20,7 @@ public class DeployTurbine implements Turbine {
     }
 
     @Override
-    public Records fromSource(String plugin, Map<String, String> config) {
+    public RecordsCollection fromSource(String plugin, Map<String, String> config) {
         return null;
     }
 

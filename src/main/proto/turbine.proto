@@ -14,8 +14,8 @@ option java_multiple_files = true;
 service TurbineService {
   rpc Init(InitRequest) returns (google.protobuf.Empty);
   // todo consider one method parameterized with connector type
-  rpc ReadFromSource(ReadFromSourceRequest) returns (Collection);
-  rpc Process(ProcessRecordsRequest) returns (Collection);
+  rpc ReadFromSource(ReadFromSourceRequest) returns (RecordsCollection);
+  rpc Process(ProcessRecordsRequest) returns (RecordsCollection);
   rpc WriteToDestination(WriteToDestinationRequest) returns (google.protobuf.Empty);
 
   // needed in CLI to know if a build is needed or not
@@ -39,7 +39,7 @@ message ReadFromSourceRequest {
 message WriteToDestinationRequest {
   string pluginName = 1;
   map<string, string> configuration = 2;
-  Collection records = 3;
+  RecordsCollection records = 3;
 }
 
 enum Language {
@@ -69,7 +69,7 @@ message Resource {
   string collection = 4;
 }
 
-message Collection {
+message RecordsCollection {
   repeated Record records = 1;
 }
 
@@ -87,7 +87,7 @@ message ReadCollectionRequest {
 
 message WriteCollectionRequest {
   Resource resource = 1 [(validate.rules).message.required = true];
-  Collection sourceCollection = 2 [(validate.rules).message.required = true];
+  RecordsCollection sourceCollection = 2 [(validate.rules).message.required = true];
   string targetCollection = 3 [(validate.rules).string.min_len = 1];
   Configs configs = 4;
 }

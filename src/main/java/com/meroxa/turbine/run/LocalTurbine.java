@@ -1,18 +1,20 @@
 package com.meroxa.turbine.run;
 
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meroxa.turbine.Records;
+import com.meroxa.turbine.RecordsCollection;
+import com.meroxa.turbine.Turbine;
 import com.meroxa.turbine.proto.InitRequest;
 import com.meroxa.turbine.proto.Language;
-import io.grpc.ManagedChannelBuilder;
-import com.meroxa.turbine.Turbine;
+import com.meroxa.turbine.proto.ReadFromSourceRequest;
 import com.meroxa.turbine.proto.TurbineServiceGrpc;
+import io.grpc.ManagedChannelBuilder;
 import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
-
-import java.nio.file.Paths;
-import java.util.Map;
 
 public class LocalTurbine implements Turbine {
     private static final Logger logger = Logger.getLogger(LocalTurbine.class);
@@ -58,13 +60,23 @@ public class LocalTurbine implements Turbine {
     }
 
     @Override
-    public Records fromSource(String plugin, Map<String, String> config) {
-        return null;
+    public RecordsCollection fromSource(String plugin, Map<String, String> config) {
+        com.meroxa.turbine.proto.RecordsCollection response = stub.readFromSource(
+            ReadFromSourceRequest.newBuilder()
+                .setPluginName(plugin)
+                .setDirection(ReadFromSourceRequest.Direction.SOURCE)
+                .putAllConfiguration(config)
+                .build()
+        );
+        return LocalRecordsCollection.fromProtoCollection(
+            stub,
+            response
+        );
     }
 
     @Override
     public Map<String, String> configFromSecret(String secretname) {
-        return null;
+        return Collections.emptyMap();
     }
 
     /*

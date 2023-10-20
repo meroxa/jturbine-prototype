@@ -1,43 +1,41 @@
 package com.meroxa.turbine.run;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.Timestamp;
-import com.meroxa.turbine.*;
-import com.meroxa.turbine.proto.Collection;
-import com.meroxa.turbine.proto.ProcessCollectionRequest;
-import com.meroxa.turbine.proto.Record;
-import com.meroxa.turbine.proto.TurbineServiceGrpc;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Timestamp;
+import com.meroxa.turbine.Processor;
+import com.meroxa.turbine.RecordsCollection;
+import com.meroxa.turbine.TurbineRecord;
+import com.meroxa.turbine.Utils;
+import com.meroxa.turbine.proto.ProcessRecordsRequest;
+import com.meroxa.turbine.proto.Record;
+import com.meroxa.turbine.proto.TurbineServiceGrpc;
+import com.meroxa.turbine.proto.WriteToDestinationRequest;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 @AllArgsConstructor
 @Getter
-public class LocalRecords implements Records {
-    private final TurbineServiceGrpc.TurbineServiceBlockingStub stub;
-    private final Collection collection;
-    private final String name;
-    private final String stream;
+public class LocalRecordsCollection implements RecordsCollection {
+    private final TurbineServiceGrpc.TurbineServiceBlockingStub coreClient;
     private final List<TurbineRecord> records;
 
-    public static LocalRecords fromProtoCollection(TurbineServiceGrpc.TurbineServiceBlockingStub stub, Collection collection) {
-        return new LocalRecords(
+    public static LocalRecordsCollection fromProtoCollection(TurbineServiceGrpc.TurbineServiceBlockingStub stub,
+                                                             com.meroxa.turbine.proto.RecordsCollection collection) {
+        return new LocalRecordsCollection(
             stub,
-            collection,
-            collection.getName(),
-            collection.getStream(),
             toTurbineRecords(collection.getRecordsList())
         );
     }
 
     public static List<TurbineRecord> toTurbineRecords(List<Record> protoRecords) {
         return Utils.toStream(protoRecords)
-            .map(LocalRecords::toTurbineRecord)
+            .map(LocalRecordsCollection::toTurbineRecord)
             .collect(Collectors.toList());
     }
 
@@ -58,25 +56,22 @@ public class LocalRecords implements Records {
     }
 
     @Override
-    public Records process(Processor processor) {
-        ProcessCollectionRequest req = ProcessCollectionRequest
+    public RecordsCollection process(Processor processor) {
+        ProcessRecordsRequest req = ProcessRecordsRequest
             .newBuilder()
             .setProcess(
-                ProcessCollectionRequest.Process
+                ProcessRecordsRequest.Process
                     .newBuilder()
                     .setName("turbinehellojava")
                     .build()
             )
-            .setCollection(collection)
+            .addAllRecords(getProtoRecords())
             .build();
 
-        Collection response = stub.addProcessToCollection(req);
+        com.meroxa.turbine.proto.RecordsCollection response = coreClient.process(req);
 
-        return new LocalRecords(
-            stub,
-            collection,
-            name,
-            stream,
+        return new LocalRecordsCollection(
+            coreClient,
             process(records, processor)
         );
     }
@@ -88,11 +83,9 @@ public class LocalRecords implements Records {
             .toList();
     }
 
-    public Collection toProtoCollection() {
-        return Collection
+    public com.meroxa.turbine.proto.RecordsCollection toProtoCollection() {
+        return com.meroxa.turbine.proto.RecordsCollection
             .newBuilder()
-            .setName(getName())
-            .setStream(getStream())
             .addAllRecords(getProtoRecords())
             .build();
     }
@@ -119,15 +112,14 @@ public class LocalRecords implements Records {
             .build();
     }
 
-    /*
-    public void writeTo(Resource resource, String collection, ConnectionOptions options) {
-        resource.write(this, collection, options);
-    }
-
-     */
-
     @Override
     public void toDestination(String plugin, Map<String, String> config) {
+        WriteToDestinationRequest request = WriteToDestinationRequest
+            .newBuilder()
+            .setPluginName(plugin)
+            .putAllConfiguration(config)
+            .build();
 
+        coreClient.writeToDestination(request);
     }
 }

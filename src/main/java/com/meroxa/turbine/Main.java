@@ -13,6 +13,7 @@ import org.jboss.logging.Logger;
 public class Main implements QuarkusApplication {
     private static final Logger logger = Logger.getLogger(Main.class);
     public static final String MODE_DEPLOY = "deploy";
+    // todo change to `run`, make consistent
     public static final String MODE_LOCAL = "local";
 
     @Inject
