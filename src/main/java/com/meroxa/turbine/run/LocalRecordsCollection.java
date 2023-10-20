@@ -12,10 +12,8 @@ import com.meroxa.turbine.Processor;
 import com.meroxa.turbine.RecordsCollection;
 import com.meroxa.turbine.TurbineRecord;
 import com.meroxa.turbine.Utils;
-import com.meroxa.turbine.proto.ProcessRecordsRequest;
+import com.meroxa.turbine.proto.*;
 import com.meroxa.turbine.proto.Record;
-import com.meroxa.turbine.proto.TurbineServiceGrpc;
-import com.meroxa.turbine.proto.WriteToDestinationRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -113,11 +111,18 @@ public class LocalRecordsCollection implements RecordsCollection {
     }
 
     @Override
-    public void toDestination(String plugin, Map<String, String> config) {
+    public void toDestination(String plugin, Map<String, String> configs) {
+        var configurations = Configurations.newBuilder();
+
+        for (Map.Entry<String, String> kv : configs.entrySet()) {
+            var c = Configuration.newBuilder().setField(kv.getKey()).setValue(kv.getValue()).build();
+            configurations.addConfiguration(c);
+        }
+
         WriteToDestinationRequest request = WriteToDestinationRequest
             .newBuilder()
             .setPluginName(plugin)
-            .putAllConfiguration(config)
+            .setConfiguration(configurations)
             .build();
 
         coreClient.writeToDestination(request);
