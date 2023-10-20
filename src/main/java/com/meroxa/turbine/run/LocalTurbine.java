@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meroxa.turbine.RecordsCollection;
 import com.meroxa.turbine.Turbine;
+import com.meroxa.turbine.proto.Configuration;
+import com.meroxa.turbine.proto.Configurations;
 import com.meroxa.turbine.proto.InitRequest;
 import com.meroxa.turbine.proto.Language;
 import com.meroxa.turbine.proto.ReadFromSourceRequest;
@@ -60,12 +62,19 @@ public class LocalTurbine implements Turbine {
     }
 
     @Override
-    public RecordsCollection fromSource(String plugin, Map<String, String> config) {
+    public RecordsCollection fromSource(String plugin, Map<String, String> configs) {
+        var configurations = Configurations.newBuilder();
+
+        for (Map.Entry<String, String> kv : configs.entrySet()) {
+            var c = Configuration.newBuilder().setField(kv.getKey()).setValue(kv.getValue()).build();
+            configurations.addConfiguration(c);
+        }
+
         com.meroxa.turbine.proto.RecordsCollection response = stub.readFromSource(
             ReadFromSourceRequest.newBuilder()
                 .setPluginName(plugin)
                 .setDirection(ReadFromSourceRequest.Direction.SOURCE)
-                .putAllConfiguration(config)
+                .setConfiguration(configurations)
                 .build()
         );
         return LocalRecordsCollection.fromProtoCollection(
