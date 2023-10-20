@@ -15,7 +15,7 @@ service TurbineService {
   rpc Init(InitRequest) returns (google.protobuf.Empty);
   // todo consider one method parameterized with connector type
   rpc ReadFromSource(ReadFromSourceRequest) returns (Collection);
-  rpc AddProcess(ProcessRecordsRequest) returns (Collection);
+  rpc Process(ProcessRecordsRequest) returns (Collection);
   rpc WriteToDestination(WriteToDestinationRequest) returns (google.protobuf.Empty);
 
   // needed in CLI to know if a build is needed or not
@@ -36,12 +36,10 @@ message ReadFromSourceRequest {
   map<string, string> configuration = 3;
 }
 
-message Records {
-
-}
-
 message WriteToDestinationRequest {
-
+  string pluginName = 1;
+  map<string, string> configuration = 2;
+  Collection records = 3;
 }
 
 enum Language {
