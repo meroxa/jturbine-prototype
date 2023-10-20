@@ -1,7 +1,7 @@
 package com.meroxa.turbine;
 
 import com.meroxa.turbine.deploy.DeployTurbine;
-import com.meroxa.turbine.local.LocalTurbine;
+import com.meroxa.turbine.run.LocalTurbine;
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.QuarkusApplication;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -13,6 +13,7 @@ import org.jboss.logging.Logger;
 public class Main implements QuarkusApplication {
     private static final Logger logger = Logger.getLogger(Main.class);
     public static final String MODE_DEPLOY = "deploy";
+    // todo change to `run`, make consistent
     public static final String MODE_LOCAL = "local";
 
     @Inject

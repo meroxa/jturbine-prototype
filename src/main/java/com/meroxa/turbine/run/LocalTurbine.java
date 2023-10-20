@@ -1,18 +1,22 @@
-package com.meroxa.turbine.local;
+package com.meroxa.turbine.run;
+
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meroxa.turbine.proto.GetResourceRequest;
+import com.meroxa.turbine.RecordsCollection;
+import com.meroxa.turbine.Turbine;
+import com.meroxa.turbine.proto.Configuration;
+import com.meroxa.turbine.proto.Configurations;
 import com.meroxa.turbine.proto.InitRequest;
 import com.meroxa.turbine.proto.Language;
-import com.meroxa.turbine.proto.Resource;
-import io.grpc.ManagedChannelBuilder;
-import com.meroxa.turbine.Turbine;
+import com.meroxa.turbine.proto.ReadFromSourceRequest;
 import com.meroxa.turbine.proto.TurbineServiceGrpc;
+import io.grpc.ManagedChannelBuilder;
 import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
-
-import java.nio.file.Paths;
 
 public class LocalTurbine implements Turbine {
     private static final Logger logger = Logger.getLogger(LocalTurbine.class);
@@ -58,6 +62,33 @@ public class LocalTurbine implements Turbine {
     }
 
     @Override
+    public RecordsCollection fromSource(String plugin, Map<String, String> configs) {
+        var configurations = Configurations.newBuilder();
+
+        for (Map.Entry<String, String> kv : configs.entrySet()) {
+            var c = Configuration.newBuilder().setField(kv.getKey()).setValue(kv.getValue()).build();
+            configurations.addConfiguration(c);
+        }
+
+        com.meroxa.turbine.proto.RecordsCollection response = stub.readFromSource(
+            ReadFromSourceRequest.newBuilder()
+                .setPluginName(plugin)
+                .setDirection(ReadFromSourceRequest.Direction.SOURCE)
+                .setConfiguration(configurations)
+                .build()
+        );
+        return LocalRecordsCollection.fromProtoCollection(
+            stub,
+            response
+        );
+    }
+
+    @Override
+    public Map<String, String> configFromSecret(String secretname) {
+        return Collections.emptyMap();
+    }
+
+    /*
     public com.meroxa.turbine.Resource resource(String name) {
         GetResourceRequest get = GetResourceRequest
             .newBuilder()
@@ -66,9 +97,6 @@ public class LocalTurbine implements Turbine {
         Resource resource = stub.getResource(get);
         return new LocalResource(stub, resource);
     }
+    */
 
-    @Override
-    public void registerSecret(String name) {
-
-    }
 }
