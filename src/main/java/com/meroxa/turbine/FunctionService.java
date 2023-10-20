@@ -1,5 +1,9 @@
 package com.meroxa.turbine;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
+
 import com.google.protobuf.Timestamp;
 import com.meroxa.turbine.deploy.DeployTurbine;
 import com.meroxa.turbine.funtime.proto.FunctionGrpc;
@@ -11,12 +15,8 @@ import io.quarkus.grpc.GrpcService;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.List;
-
 @GrpcService
-public class FunctionService extends FunctionGrpc.FunctionImplBase implements Turbine {
+public class FunctionService extends FunctionGrpc.FunctionImplBase {
     @Inject
     Instance<DeployTurbine> turbine;
 
@@ -79,15 +79,4 @@ public class FunctionService extends FunctionGrpc.FunctionImplBase implements Tu
             .setNanos(timestamp.getNano())
             .build();
     }
-
-    @Override
-    public Resource resource(String name) {
-        return null;
-    }
-
-    @Override
-    public void registerSecret(String name) {
-
-    }
-
 }
