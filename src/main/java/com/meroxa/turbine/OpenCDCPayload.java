@@ -2,19 +2,28 @@ package com.meroxa.turbine;
 
 import java.nio.charset.StandardCharsets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder(toBuilder = true)
+@ToString
 public class OpenCDCPayload {
     private byte[] before;
     private byte[] after;
+
+    @SneakyThrows
+    public static OpenCDCPayload fromString(String s) {
+        return new ObjectMapper().readValue(s, OpenCDCPayload.class);
+    }
 
     public void afterJsonSet(String path, Object value) {
         var newPayload = JsonPath.parse(getAfter())

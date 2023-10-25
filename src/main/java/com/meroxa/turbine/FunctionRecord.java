@@ -7,11 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder(toBuilder = true)
+@ToString
 public class FunctionRecord {
     public String key;
     public String value;

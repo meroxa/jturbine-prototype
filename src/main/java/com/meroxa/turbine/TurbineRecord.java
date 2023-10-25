@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder(toBuilder = true)
+@ToString
 public class TurbineRecord {
     private static final ObjectMapper mapper = new ObjectMapper();
     private String key;

@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder(toBuilder = true)
+@ToString
 public class OpenCDCRecord {
     private byte[] position;
     private String operation;
