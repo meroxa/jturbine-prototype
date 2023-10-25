@@ -21,7 +21,7 @@ public class DeployTurbine implements Turbine {
 
     @Override
     public RecordsCollection fromSource(String plugin, Map<String, String> config) {
-        return null;
+        return new DeployRecords(this);
     }
 
     @Override
