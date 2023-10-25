@@ -1,23 +1,31 @@
 package com.meroxa.turbine;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.meroxa.turbine.deploy.DeployTurbine;
+import com.meroxa.turbine.run.LocalTurbine;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
 @Path("/")
 public class FunctionResource {
+    private static final Logger logger = Logger.getLogger(LocalTurbine.class);
+
     @Inject
     Instance<DeployTurbine> turbine;
 
     @SneakyThrows
     @POST
-    public List<FunctionRecord> process(List<FunctionRecord> records) {
+    public OpenCDCRecord process(OpenCDCRecord record) {
+        logger.infof("FunctionResource.process got %s", record);
+        return record;
+    }
+
+    public List<FunctionRecord> processOld(List<FunctionRecord> records) {
         List<TurbineRecord> turbineRecords = Utils.toStream(records)
             .map(fr -> TurbineRecord.builder()
                 .key(fr.key)
