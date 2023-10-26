@@ -28,7 +28,7 @@ public class FunctionResource {
         List<TurbineRecord> turbineRecords = List.of(
             TurbineRecord.builder()
                 .key(new String(record.getKey()))
-                .payload(record.getPayload().toString())
+                .payload(record.getPayload().jsonString())
                 .timestamp(LocalDateTime.now())
                 .build()
         );

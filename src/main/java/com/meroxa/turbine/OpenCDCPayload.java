@@ -7,11 +7,13 @@ import com.jayway.jsonpath.JsonPath;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder(toBuilder = true)
@@ -23,6 +25,11 @@ public class OpenCDCPayload {
     @SneakyThrows
     public static OpenCDCPayload fromString(String s) {
         return new ObjectMapper().readValue(s, OpenCDCPayload.class);
+    }
+
+    @SneakyThrows
+    public String jsonString() {
+        return new ObjectMapper().writeValueAsString(this);
     }
 
     public void afterJsonSet(String path, Object value) {
