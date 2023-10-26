@@ -21,7 +21,7 @@ class FunctionResourceTest {
             .key(Base64.getDecoder().decode("MTU="))
             .payload(
                 OpenCDCPayload.builder()
-                    .after(Base64.getDecoder().decode("bWFsaW5h"))
+                    .after("{\"customer_email\": \"HaRis@meroXA.IO\"}".getBytes(StandardCharsets.UTF_8))
                     .build()
             )
             .operation("create")
@@ -31,16 +31,16 @@ class FunctionResourceTest {
         underTest.turbine = newInstance(records -> records.stream()
             .map(r -> {
                 var copy = r.copy();
-                String after = Base64.getEncoder().encodeToString("haris was here".getBytes(StandardCharsets.UTF_8));
-                copy.jsonSet("$.after", after);
+                String email = (String) copy.jsonGet("$.after.customer_email");
+                copy.jsonSet("$.after.customer_email", email.toLowerCase());
 
                 return copy;
             })
             .toList());
 
-        OpenCDCRecord res = underTest.process(in);
-
+        byte[] res = underTest.process(in);
         Assertions.assertNotNull(res);
+        Assertions.assertEquals("{\"customer_email\":\"haris@meroxa.io\"}", new String(res));
     }
 
     private Instance<DeployTurbine> newInstance(Processor processor) {

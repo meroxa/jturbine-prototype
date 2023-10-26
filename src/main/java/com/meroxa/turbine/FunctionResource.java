@@ -1,6 +1,5 @@
 package com.meroxa.turbine;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class FunctionResource {
 
     @SneakyThrows
     @POST
-    public OpenCDCRecord process(OpenCDCRecord record) {
+    public byte[] process(OpenCDCRecord record) {
         logger.infof("FunctionResource.process got %s", record);
 
         List<TurbineRecord> turbineRecords = List.of(
@@ -38,29 +37,7 @@ public class FunctionResource {
 
         logger.infof("transformed turbine record: %s", tr);
 
-        return OpenCDCRecord.builder()
-            .key(tr.getKey().getBytes(StandardCharsets.UTF_8))
-            .payload(OpenCDCPayload.fromString(tr.getPayload()))
-            .build();
+        return OpenCDCPayload.fromString(tr.getPayload()).getAfter();
     }
 
-    public List<FunctionRecord> processOld(List<FunctionRecord> records) {
-        List<TurbineRecord> turbineRecords = Utils.toStream(records)
-            .map(fr -> TurbineRecord.builder()
-                .key(fr.key)
-                .payload(fr.value)
-                .timestamp(fr.timestamp)
-                .build()
-            ).toList();
-
-        List<TurbineRecord> processed = turbine.get().getProcessor().apply(turbineRecords);
-
-        return processed.stream()
-            .map(tr -> FunctionRecord.builder()
-                .key(tr.getKey())
-                .value(tr.getPayload())
-                .timestamp(tr.getTimestamp())
-                .build())
-            .toList();
-    }
 }

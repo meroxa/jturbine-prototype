@@ -1,14 +1,18 @@
 package com.meroxa.turbine;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Base64;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jayway.jsonpath.JsonPath;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
@@ -26,20 +30,46 @@ public class TurbineRecord {
     }
 
     public void jsonSet(String path, Object value) {
-        var newPayload = JsonPath.parse(getPayload())
+        var newPayload = JsonPath.parse(base64DecodeAfter())
             .set(path, value)
             .jsonString();
-        setPayload(newPayload);
+
+        setPayload(base64EncodeAfter(newPayload));
     }
 
     public void jsonAdd(String path, String key, Object value) {
-        var newPayload = JsonPath.parse(getPayload())
+        var newPayload = JsonPath.parse(base64DecodeAfter())
             .put(path, key, value)
             .jsonString();
-        setPayload(newPayload);
+        setPayload(base64EncodeAfter(newPayload));
     }
 
     public Object jsonGet(String path) {
-        return JsonPath.read(getPayload(), path);
+        return JsonPath.read(base64DecodeAfter(), path);
+    }
+
+    @SneakyThrows
+    private String base64DecodeAfter() {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode json = (ObjectNode) mapper.readTree(getPayload());
+        // after is a Base64 encoded string
+        String after = json.get("after").asText();
+        String afterDec = new String(Base64.getDecoder().decode(after));
+        json.put("after", mapper.readTree(afterDec));
+
+        return mapper.writeValueAsString(json);
+    }
+
+    @SneakyThrows
+    private String base64EncodeAfter(String payload) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode json = (ObjectNode) mapper.readTree(payload);
+
+        String after = mapper.writeValueAsString(json.get("after"));
+        String afterEnc = Base64.getEncoder().encodeToString(after.getBytes(StandardCharsets.UTF_8));
+        json.put("after", afterEnc);
+
+        return mapper.writeValueAsString(json);
     }
 }
+
