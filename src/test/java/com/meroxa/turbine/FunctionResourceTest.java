@@ -16,12 +16,15 @@ class FunctionResourceTest {
 
     @Test
     void test() {
+        byte[] bytes = new byte[]{
+            123, 34, 99, 117, 115, 116, 111, 109, 101, 114, 95, 101, 109, 97, 105, 108, 34, 58, 32, 34, 102, 111, 111, 64, 77, 69, 82, 79, 88, 97, 46, 105, 111, 34, 125
+        };
         var in = OpenCDCRecord.builder()
             .position(Base64.getDecoder().decode("eyJncm91cElEIjoiNDVkYjk1ZGMtOGI2Yi00NDQ5LTkyN2QtYTNlODViZTcyZmQwIiwidG9waWMiOiJjaXNjby1kZW1vLTMtc291cmNlLWZpbGUiLCJwYXJ0aXRpb24iOjAsIm9mZnNldCI6MjJ9"))
             .key(Base64.getDecoder().decode("MTU="))
             .payload(
                 OpenCDCPayload.builder()
-                    .after("{\"customer_email\": \"HaRis@meroXA.IO\"}".getBytes(StandardCharsets.UTF_8))
+                    .after(bytes)
                     .build()
             )
             .operation("create")
@@ -40,7 +43,7 @@ class FunctionResourceTest {
 
         byte[] res = underTest.process(in);
         Assertions.assertNotNull(res);
-        Assertions.assertEquals("{\"customer_email\":\"haris@meroxa.io\"}", new String(res));
+        Assertions.assertEquals("{\"customer_email\":\"foo@meroxa.io\"}", new String(res));
     }
 
     private Instance<DeployTurbine> newInstance(Processor processor) {

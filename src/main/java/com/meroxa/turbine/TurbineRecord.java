@@ -51,13 +51,13 @@ public class TurbineRecord {
     @SneakyThrows
     private String base64DecodeAfter() {
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode json = (ObjectNode) mapper.readTree(getPayload());
+        ObjectNode payloadJson = (ObjectNode) mapper.readTree(getPayload());
         // after is a Base64 encoded string
-        String after = json.get("after").asText();
+        String after = payloadJson.get("after").asText();
         String afterDec = new String(Base64.getDecoder().decode(after));
-        json.put("after", mapper.readTree(afterDec));
+        payloadJson.put("after", mapper.readTree(afterDec));
 
-        return mapper.writeValueAsString(json);
+        return mapper.writeValueAsString(payloadJson);
     }
 
     @SneakyThrows
