@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import com.meroxa.turbine.Processor;
@@ -20,10 +21,14 @@ import com.meroxa.turbine.proto.TurbineServiceGrpc;
 import com.meroxa.turbine.proto.WriteToDestinationRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
 @AllArgsConstructor
 @Getter
 public class LocalRecordsCollection implements RecordsCollection {
+    private static final Logger logger = Logger.getLogger(LocalRecordsCollection.class);
+
     private final TurbineServiceGrpc.TurbineServiceBlockingStub coreClient;
     private final String sourceStreamName;
     private final List<TurbineRecord> records;
@@ -40,13 +45,20 @@ public class LocalRecordsCollection implements RecordsCollection {
     public static List<TurbineRecord> toTurbineRecords(List<Record> protoRecords) {
         return Utils.toStream(protoRecords)
             .map(LocalRecordsCollection::toTurbineRecord)
-            .collect(Collectors.toList());
+            .toList();
     }
 
-    private static TurbineRecord toTurbineRecord(Record record) {
+    @SneakyThrows
+    static TurbineRecord toTurbineRecord(Record record) {
+        logger.infof("transform proto record: %s", String.valueOf(record));
+        String payload = new ObjectMapper()
+            .readTree(record.getValue().toStringUtf8())
+            .get("payload")
+            .toString();
+
         return TurbineRecord.builder()
             .key(record.getKey())
-            .payload(record.getValue().toStringUtf8())
+            .payload(payload)
             .timestamp(toJavaTimestamp(record.getTimestamp()))
             .build();
     }
@@ -87,6 +99,8 @@ public class LocalRecordsCollection implements RecordsCollection {
     }
 
     private List<TurbineRecord> process(List<TurbineRecord> records, Processor processor) {
+        logger.infof("processing records: %s", String.valueOf(records));
+
         return Utils.toStream(records)
             .map(r -> processor.apply(List.of(r)))
             .flatMap(List::stream)
